@@ -44,13 +44,19 @@ def read_template(file_path):
         return file.read()
 
 
+def write_html_file(content, output_file="animals.html"):
+    """Writes the HTML content to a file"""
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write(content)
+
+
 def main():
     """The main function"""
     data = load_data('animals_data.json')
-
-    generate_animals_string(data)
-
+    animals_string = generate_animals_string(data)
     template = read_template("animals_template.html")
+    new_content_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_string)
+    write_html_file(new_content_html)
 
 
 if __name__ == "__main__":
