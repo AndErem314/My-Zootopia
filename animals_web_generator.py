@@ -22,21 +22,33 @@ def generate_animals_string(data):
     """Generates HTML string with all animals' data as styled cards"""
     output = ""
     for species in data:
+        # Start card
         output += '<li class="cards__item">\n'
 
+        # Add title (name)
         if 'name' in species:
-            output += f"Name: {species['name']}<br/>\n"
+            output += f'  <div class="card__title">{species["name"]}</div>\n'
 
+        # Start text paragraph
+        output += '  <p class="card__text">\n'
+
+        # Add diet if available
         if is_fields_available(species, 'characteristics', 'diet'):
-            output += f"Diet: {species['characteristics']['diet']}<br/>\n"
+            output += f'    <strong>Diet:</strong> {species["characteristics"]["diet"]}<br/>\n'
 
+        # Add location if available
         if is_fields_available(species, 'locations'):
-            output += f"Location: {', '.join(species['locations'])}<br/>\n"
+            locations = ', '.join(species['locations'])
+            output += f'    <strong>Location:</strong> {locations}<br/>\n'
 
+        # Add type if available
         if is_fields_available(species, 'characteristics', 'type'):
-            output += f"Type: {species['characteristics']['type']}<br/>\n"
+            output += f'    <strong>Type:</strong> {species["characteristics"]["type"]}<br/>\n'
 
+        # Close text paragraph and card
+        output += '  </p>\n'
         output += '</li>\n\n'
+
     return output
 
 
