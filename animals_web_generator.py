@@ -36,10 +36,19 @@ def print_data_from_json(data):
 
         print()
 
+def read_template(file_path):
+    """Reads the HTML template file."""
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return file.read()
+
 
 def main():
+    """The main function"""
     data = load_data('animals_data.json')
+
     print_data_from_json(data)
+
+    template = read_template("animals_template.html")
 
 
 if __name__ == "__main__":
