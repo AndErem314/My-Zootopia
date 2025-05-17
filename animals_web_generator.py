@@ -21,7 +21,7 @@ def serialize_animal(species):
     """Serialize a single animal object to HTML card format"""
     output = ''
     output += '<li class="cards__item">\n'
-    output += f'  <div class="card__title">{species.get("name", "Unknown")}</div>\n'
+    output += f'  <div class="card__title">{species["name"]}</div>\n'
     output += '  <p class="card__text">\n'
 
     if is_fields_available(species, 'characteristics', 'diet'):
@@ -33,6 +33,9 @@ def serialize_animal(species):
 
     if is_fields_available(species, 'characteristics', 'type'):
         output += f'    <strong>Type:</strong> {species["characteristics"]["type"]}<br/>\n'
+
+    if is_fields_available(species, 'taxonomy', 'scientific_name'):
+        output += f'    <strong>Latin name:</strong> {species["taxonomy"]["scientific_name"]}<br/>\n'
 
     output += '  </p>\n'
     output += '</li>\n'
