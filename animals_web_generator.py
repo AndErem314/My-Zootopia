@@ -22,5 +22,4 @@ def print_data_from_json(data):
 
         if 'characteristics' in species and 'type' in species['characteristics']:
             print(f"Type: {species['characteristics']['type']}")
-
         print()
