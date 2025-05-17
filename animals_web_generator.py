@@ -1,10 +1,9 @@
 import json
 
-
-def load_data(file_path):
+def load_data(file):
     """ Loads a JSON file """
-    with open(file_path, "r") as handle:
-        return json.load(handle)
+    with open(file, "r") as fileobj:
+        return json.load(fileobj)
 
 
 def is_fields_available(data, *keys):
@@ -18,56 +17,52 @@ def is_fields_available(data, *keys):
     return True
 
 
-def generate_animals_string(data):
-    """Generates HTML string with all animals' data as styled cards"""
-    output = ""
-    for species in data:
-        # Start card
-        output += '<li class="cards__item">\n'
+def serialize_animal(species):
+    """Serialize a single animal object to HTML card format"""
+    output = ''
+    output += '<li class="cards__item">\n'
+    output += f'  <div class="card__title">{species.get("name", "Unknown")}</div>\n'
+    output += '  <p class="card__text">\n'
 
-        # Add title (name)
-        if 'name' in species:
-            output += f'  <div class="card__title">{species["name"]}</div>\n'
+    if is_fields_available(species, 'characteristics', 'diet'):
+        output += f'    <strong>Diet:</strong> {species["characteristics"]["diet"]}<br/>\n'
 
-        # Start text paragraph
-        output += '  <p class="card__text">\n'
+    if is_fields_available(species, 'locations'):
+        locations = ', '.join(species["locations"])
+        output += f'    <strong>Location:</strong> {locations}<br/>\n'
 
-        # Add diet if available
-        if is_fields_available(species, 'characteristics', 'diet'):
-            output += f'    <strong>Diet:</strong> {species["characteristics"]["diet"]}<br/>\n'
+    if is_fields_available(species, 'characteristics', 'type'):
+        output += f'    <strong>Type:</strong> {species["characteristics"]["type"]}<br/>\n'
 
-        # Add location if available
-        if is_fields_available(species, 'locations'):
-            locations = ', '.join(species['locations'])
-            output += f'    <strong>Location:</strong> {locations}<br/>\n'
-
-        # Add type if available
-        if is_fields_available(species, 'characteristics', 'type'):
-            output += f'    <strong>Type:</strong> {species["characteristics"]["type"]}<br/>\n'
-
-        # Close text paragraph and card
-        output += '  </p>\n'
-        output += '</li>\n\n'
-
+    output += '  </p>\n'
+    output += '</li>\n'
     return output
 
 
-def read_template(file_path):
+def generate_animals_html(data):
+    """Generate complete HTML cards for all animals"""
+    output = ''
+    for animal_obj in data:
+        output += serialize_animal(animal_obj)
+    return '<ul class="cards">\n' + output + '</ul>'
+
+
+def read_template(file):
     """Reads the HTML template file."""
-    with open(file_path, 'r', encoding='utf-8') as file:
-        return file.read()
+    with open(file, 'r', encoding='utf-8') as fileobj:
+        return fileobj.read()
 
 
 def write_html_file(content, output_file="animals.html"):
     """Writes the HTML content to a file"""
-    with open(output_file, 'w', encoding='utf-8') as file:
-        file.write(content)
+    with open(output_file, 'w', encoding='utf-8') as fileobj:
+        fileobj.write(content)
 
 
 def main():
     """The main function"""
     data = load_data('animals_data.json')
-    animals_string = generate_animals_string(data)
+    animals_string = generate_animals_html(data)
     template = read_template("animals_template.html")
     new_content_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_string)
     write_html_file(new_content_html)
