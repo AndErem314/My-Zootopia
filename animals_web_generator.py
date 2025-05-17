@@ -19,22 +19,24 @@ def is_fields_available(data, *keys):
 
 
 def generate_animals_string(data):
-    """Generates a string with all animals' data"""
+    """Generates HTML string with all animals' data as styled cards"""
     output = ""
     for species in data:
+        output += '<li class="cards__item">\n'
+
         if 'name' in species:
-            output += f"Name: {species['name']}\n"
+            output += f"Name: {species['name']}<br/>\n"
 
         if is_fields_available(species, 'characteristics', 'diet'):
-            output += f"Diet: {species['characteristics']['diet']}\n"
+            output += f"Diet: {species['characteristics']['diet']}<br/>\n"
 
         if is_fields_available(species, 'locations'):
-            output += f"Location: {', '.join(species['locations'])}\n"
+            output += f"Location: {', '.join(species['locations'])}<br/>\n"
 
         if is_fields_available(species, 'characteristics', 'type'):
-            output += f"Type: {species['characteristics']['type']}\n"
+            output += f"Type: {species['characteristics']['type']}<br/>\n"
 
-        output += "\n"
+        output += '</li>\n\n'
     return output
 
 
