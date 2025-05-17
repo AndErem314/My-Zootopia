@@ -22,22 +22,24 @@ def serialize_animal(species):
     output = ''
     output += '<li class="cards__item">\n'
     output += f'  <div class="card__title">{species["name"]}</div>\n'
-    output += '  <p class="card__text">\n'
+    output += '  <div class="card__text">\n'
+    output += '   <ul>'
 
     if is_fields_available(species, 'characteristics', 'diet'):
-        output += f'    <strong>Diet:</strong> {species["characteristics"]["diet"]}<br/>\n'
+        output += f'    <li><strong>Diet:</strong> {species["characteristics"]["diet"]}</li>\n'
 
     if is_fields_available(species, 'locations'):
         locations = ', '.join(species["locations"])
-        output += f'    <strong>Location:</strong> {locations}<br/>\n'
+        output += f'    <li><strong>Location:</strong> {locations}</li>\n'
 
     if is_fields_available(species, 'characteristics', 'type'):
-        output += f'    <strong>Type:</strong> {species["characteristics"]["type"]}<br/>\n'
+        output += f'    <li><strong>Type:</strong> {species["characteristics"]["type"]}</li>\n'
 
     if is_fields_available(species, 'taxonomy', 'scientific_name'):
-        output += f'    <strong>Latin name:</strong> {species["taxonomy"]["scientific_name"]}<br/>\n'
+        output += f'    <li><strong>Latin name:</strong> <em>{species["taxonomy"]["scientific_name"]}</em></li>\n'
 
-    output += '  </p>\n'
+    output += '   <ul>'
+    output += '  </div>\n'
     output += '</li>\n'
     return output
 
