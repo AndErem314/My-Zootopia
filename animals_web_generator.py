@@ -6,20 +6,41 @@ def load_data(file_path):
     with open(file_path, "r") as handle:
         return json.load(handle)
 
-data = load_data('animals_data.json')
+
+def is_fields_available(data, *keys):
+    """Helper function to check if the searched field/parameters are existing in the data.
+    If it exists return True."""
+    new_data = data
+    for key in keys:
+        if key not in new_data:
+            return False
+        new_data = new_data[key]
+    return True
 
 
 def print_data_from_json(data):
-    """Function take a loaded data from json file and print it"""
+    """Function take a loaded data from json file and print all fields, if they are existing"""
     for species in data:
-        print(f"Name: {species['name']}")
 
-        if 'characteristics' in species and 'diet' in species['characteristics']:
+        if 'name' in species:
+            print(f"Name: {species['name']}")
+
+        if is_fields_available(species, 'characteristics', 'diet'):
             print(f"Diet: {species['characteristics']['diet']}")
 
-        if 'locations' in species and species['locations']:
+        if is_fields_available(species, 'locations'):
             print(f"Location: {', '.join(species['locations'])}")
 
-        if 'characteristics' in species and 'type' in species['characteristics']:
+        if is_fields_available(species, 'characteristics', 'type'):
             print(f"Type: {species['characteristics']['type']}")
+
         print()
+
+
+def main():
+    data = load_data('animals_data.json')
+    print_data_from_json(data)
+
+
+if __name__ == "__main__":
+    main()
