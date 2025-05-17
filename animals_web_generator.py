@@ -18,23 +18,25 @@ def is_fields_available(data, *keys):
     return True
 
 
-def print_data_from_json(data):
-    """Function take a loaded data from json file and print all fields, if they are existing"""
+def generate_animals_string(data):
+    """Generates a string with all animals' data"""
+    output = ""
     for species in data:
-
         if 'name' in species:
-            print(f"Name: {species['name']}")
+            output += f"Name: {species['name']}\n"
 
         if is_fields_available(species, 'characteristics', 'diet'):
-            print(f"Diet: {species['characteristics']['diet']}")
+            output += f"Diet: {species['characteristics']['diet']}\n"
 
         if is_fields_available(species, 'locations'):
-            print(f"Location: {', '.join(species['locations'])}")
+            output += f"Location: {', '.join(species['locations'])}\n"
 
         if is_fields_available(species, 'characteristics', 'type'):
-            print(f"Type: {species['characteristics']['type']}")
+            output += f"Type: {species['characteristics']['type']}\n"
 
-        print()
+        output += "\n"
+    return output
+
 
 def read_template(file_path):
     """Reads the HTML template file."""
@@ -46,7 +48,7 @@ def main():
     """The main function"""
     data = load_data('animals_data.json')
 
-    print_data_from_json(data)
+    generate_animals_string(data)
 
     template = read_template("animals_template.html")
 
