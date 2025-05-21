@@ -23,14 +23,14 @@ def serialize_animal(species):
     output += '<li class="cards__item">\n'
     output += f'  <div class="card__title">{species["name"]}</div>\n'
     output += '  <div class="card__text">\n'
-    output += '   <ul>'
+    output += '   <ul>\n'
 
     if is_fields_available(species, 'characteristics', 'diet'):
         output += f'    <li><strong>Diet:</strong> {species["characteristics"]["diet"]}</li>\n'
 
     if is_fields_available(species, 'locations'):
-        locations = ', '.join(species["locations"])
-        output += f'    <li><strong>Location:</strong> {locations}</li>\n'
+        location = species["locations"][0] if species["locations"] else ""
+        output += f'    <li><strong>Location:</strong> {location}</li>\n'
 
     if is_fields_available(species, 'characteristics', 'type'):
         output += f'    <li><strong>Type:</strong> {species["characteristics"]["type"]}</li>\n'
@@ -38,7 +38,7 @@ def serialize_animal(species):
     if is_fields_available(species, 'taxonomy', 'scientific_name'):
         output += f'    <li><strong>Latin name:</strong> <em>{species["taxonomy"]["scientific_name"]}</em></li>\n'
 
-    output += '   <ul>'
+    output += '   </ul>\n'
     output += '  </div>\n'
     output += '</li>\n'
     return output
@@ -49,7 +49,7 @@ def generate_animals_html(data):
     output = ''
     for animal_obj in data:
         output += serialize_animal(animal_obj)
-    return '<ul class="cards">\n' + output + '</ul>'
+    return output
 
 
 def read_template(file):
