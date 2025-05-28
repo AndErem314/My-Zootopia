@@ -1,16 +1,26 @@
 import json
+import os
+from dotenv import load_dotenv
 import requests
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Constants
 API_URL = "https://api.api-ninjas.com/v1/animals?name={}"
-API_KEY = "<KEY>" #tbd
+API_KEY = os.getenv("API_NINJAS_KEY")
 
 
 def load_data_from_api(animal_name="Fox"):
     """Loads animal data from API for the given name (default: 'Fox')"""
+    if not API_KEY:
+        raise ValueError("API key not found. Please set API_NINJAS_KEY in .env file")
+
     try:
         response = requests.get(
             API_URL.format(animal_name),
-            headers={'X-Api-Key': API_KEY}
+            headers={'X-Api-Key': API_KEY},
+            timeout=10
         )
         if response.status_code == requests.codes.ok:
             return response.json()
@@ -80,7 +90,8 @@ def write_html_file(content, output_file="animals.html"):
 
 def main():
     """The main function"""
-    data = load_data('animals_data.json')
+    animal_name = input("Enter an animal name: ")
+    data = load_data_from_api(animal_name)
     animals_string = generate_animals_html(data)
     template = read_template("animals_template.html")
     new_content_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_string)
