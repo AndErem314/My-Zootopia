@@ -1,4 +1,5 @@
 Animal Facts Explorer 🐾
+
 A Python project that fetches and displays animal facts using the API Ninjas API.
 
 📌 Project Description
@@ -13,20 +14,17 @@ in a clean HTML format.
 
 🚀 Installation
 
-Clone the repository:
+# Clone the repository
 
-git clone https://github.com/your-username/animal-facts.git
-cd animal-facts
+# Set up environment:
 
-Set up environment:
-
-Create a .env file:
+- Create a .env file:
 
 API_NINJAS_KEY=your_api_key_here
 
-Get a free API key from API Ninjas.
+- Get a free API key from API Ninjas.
 
-Install dependencies:
+# Install dependencies:
 
 pip install -r requirements.txt
 
