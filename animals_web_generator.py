@@ -1,44 +1,4 @@
-import os
-from dotenv import load_dotenv
-import requests
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Constants
-API_URL = "https://api.api-ninjas.com/v1/animals?name={}"
-API_KEY = os.getenv("API_NINJAS_KEY")
-
-
-def load_data_from_api(animal_name):
-    """Loads animal data from API for the given name"""
-    if not API_KEY:
-        raise ValueError("API key not found. Please set API_NINJAS_KEY in .env file")
-
-    try:
-        response = requests.get(
-            API_URL.format(animal_name),
-            headers={'X-Api-Key': API_KEY},
-            timeout=10
-        )
-        if response.status_code == requests.codes.ok:
-            data = response.json()
-            if not data:
-                return {
-                    'error': True,
-                    'message': f'The animal "{animal_name}" doesn\'t exist.',
-                    'animal_name': animal_name
-                }
-            return data
-        return {
-            'error': True,
-            'message': f'API request failed (Status: {response.status_code}).',
-            'animal_name': animal_name
-        }
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        return None
+import data_fetcher
 
 
 def serialize_animal(species):
@@ -93,7 +53,7 @@ def write_html_file(content, output_file="animals.html"):
 def main():
     """The main function"""
     animal_name = input("Enter an animal name: ").strip()
-    data = load_data_from_api(animal_name)
+    data = data_fetcher.fetch_data(animal_name)
     animals_html = generate_animals_html(data)
     template = read_template("animals_template.html")
     new_content_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_html)
