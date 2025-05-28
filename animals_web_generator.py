@@ -1,9 +1,23 @@
 import json
+import requests
 
-def load_data(file):
-    """ Loads a JSON file """
-    with open(file, "r") as fileobj:
-        return json.load(fileobj)
+API_URL = "https://api.api-ninjas.com/v1/animals?name={}"
+API_KEY = "<KEY>" #tbd
+
+
+def load_data_from_api(animal_name="Fox"):
+    """Loads animal data from API for the given name (default: 'Fox')"""
+    try:
+        response = requests.get(
+            API_URL.format(animal_name),
+            headers={'X-Api-Key': API_KEY}
+        )
+        if response.status_code == requests.codes.ok:
+            return response.json()
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
 
 
 def is_fields_available(data, *keys):
