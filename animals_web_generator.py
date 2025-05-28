@@ -1,4 +1,3 @@
-import json
 import os
 from dotenv import load_dotenv
 import requests
@@ -11,8 +10,8 @@ API_URL = "https://api.api-ninjas.com/v1/animals?name={}"
 API_KEY = os.getenv("API_NINJAS_KEY")
 
 
-def load_data_from_api(animal_name="Fox"):
-    """Loads animal data from API for the given name (default: 'Fox')"""
+def load_data_from_api(animal_name):
+    """Loads animal data from API for the given name"""
     if not API_KEY:
         raise ValueError("API key not found. Please set API_NINJAS_KEY in .env file")
 
@@ -23,57 +22,60 @@ def load_data_from_api(animal_name="Fox"):
             timeout=10
         )
         if response.status_code == requests.codes.ok:
-            return response.json()
+            data = response.json()
+            if not data:
+                return {
+                    'error': True,
+                    'message': f'The animal "{animal_name}" doesn\'t exist.',
+                    'animal_name': animal_name
+                }
+            return data
+        return {
+            'error': True,
+            'message': f'API request failed (Status: {response.status_code}).',
+            'animal_name': animal_name
+        }
 
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
         return None
 
 
-def is_fields_available(data, *keys):
-    """Helper function to check if the searched field/parameters are existing in the data.
-    If it exists return True."""
-    new_data = data
-    for key in keys:
-        if key not in new_data:
-            return False
-        new_data = new_data[key]
-    return True
-
-
 def serialize_animal(species):
-    """Serialize a single animal object to HTML card format"""
-    output = ''
-    output += '<li class="cards__item">\n'
-    output += f'  <div class="card__title">{species["name"]}</div>\n'
-    output += '  <div class="card__text">\n'
-    output += '   <ul>\n'
+    """Serialize a single animal object to HTML card format."""
+    output = []
+    output.append('<li class="cards__item">')
+    output.append(f'  <div class="card__title">{species.get("name", "Unknown")}</div>')
+    output.append('  <div class="card__text">')
+    output.append('   <ul>')
 
-    if is_fields_available(species, 'characteristics', 'diet'):
-        output += f'    <li><strong>Diet:</strong> {species["characteristics"]["diet"]}</li>\n'
+    diet = species.get("characteristics", {}).get("diet")
+    if diet:
+        output.append(f'    <li><strong>Diet:</strong> {diet}</li>')
 
-    if is_fields_available(species, 'locations'):
-        location = species["locations"][0] if species["locations"] else ""
-        output += f'    <li><strong>Location:</strong> {location}</li>\n'
+    locations = species.get("locations", [])
+    if locations:
+        output.append(f'    <li><strong>Location:</strong> {locations[0]}</li>')
 
-    if is_fields_available(species, 'characteristics', 'type'):
-        output += f'    <li><strong>Type:</strong> {species["characteristics"]["type"]}</li>\n'
+    animal_type = species.get("characteristics", {}).get("type")
+    if animal_type:
+        output.append(f'    <li><strong>Type:</strong> {animal_type}</li>')
 
-    if is_fields_available(species, 'taxonomy', 'scientific_name'):
-        output += f'    <li><strong>Latin name:</strong> <em>{species["taxonomy"]["scientific_name"]}</em></li>\n'
+    scientific_name = species.get("taxonomy", {}).get("scientific_name")
+    if scientific_name:
+        output.append(f'    <li><strong>Latin name:</strong> <em>{scientific_name}</em></li>')
 
-    output += '   </ul>\n'
-    output += '  </div>\n'
-    output += '</li>\n'
-    return output
+    output.append('   </ul>')
+    output.append('  </div>')
+    output.append('</li>')
+    return '\n'.join(output)
 
 
 def generate_animals_html(data):
-    """Generate complete HTML cards for all animals"""
-    output = ''
-    for animal_obj in data:
-        output += serialize_animal(animal_obj)
-    return output
+    """Generate HTML cards for all animals."""
+    if isinstance(data, dict) and data.get('error'):
+        return f'<div class="error">{data["message"]}</div>'
+    return ''.join(serialize_animal(animal) for animal in data)
 
 
 def read_template(file):
@@ -90,11 +92,11 @@ def write_html_file(content, output_file="animals.html"):
 
 def main():
     """The main function"""
-    animal_name = input("Enter an animal name: ")
+    animal_name = input("Enter an animal name: ").strip()
     data = load_data_from_api(animal_name)
-    animals_string = generate_animals_html(data)
+    animals_html = generate_animals_html(data)
     template = read_template("animals_template.html")
-    new_content_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_string)
+    new_content_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_html)
     write_html_file(new_content_html)
 
 
