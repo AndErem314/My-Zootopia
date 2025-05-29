@@ -45,6 +45,6 @@ Invalid animal name: Shows The animal "XYZ" doesn't exist.
 
 API errors: Displays Failed to connect to the API: [error].
 
-📜 License
+📜 **License**
 
 MIT License. See LICENSE.
