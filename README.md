@@ -1,58 +1,43 @@
-Animal Facts Explorer 🐾
+**_Animal Facts Explorer 🐾**_
 
 A Python project that fetches and displays animal facts using the API Ninjas API.
 
-📌 Project Description
+**📌 Project Description**
 
-This project lets users search for animals (e.g., "Fox," "Tiger") and displays their:
+This project lets users search for animals (e.g., "Fox," "Tiger") and displays following info in a clean HTML format:
 
-Scientific name
-Diet
-Habitat
-Taxonomy
-in a clean HTML format.
+* Scientific name
+* Diet
+* Habitat
+* Taxonomy
 
-🚀 Installation
+🚀 **Installation**
 
-# Clone the repository
+- Clone the repository
 
-# Set up environment:
+- Set up environment:
 
 - Create a .env file:
 
-API_NINJAS_KEY=your_api_key_here
+API_NINJAS_KEY=<your_api_key_here>
 
 - Get a free API key from API Ninjas.
 
-# Install dependencies:
+- Install dependencies:
 
-pip install -r requirements.txt
+_pip install -r requirements.txt_
 
-🛠 Usage
+🛠 **Usage**
 
 1. Run the Script
 
-
-python animals_web_generator.py
+_python animals_web_generator.py_
 
 Enter an animal name when prompted (e.g., "Fox").
 
 2. Output
 
 Generates an animals.html file with facts.
-
-Example output for "Fox":
-
-<li class="cards__item">
-  <div class="card__title">Red Fox</div>
-  <div class="card__text">
-    <ul>
-      <li><strong>Diet:</strong> Omnivore</li>
-      <li><strong>Location:</strong> North America</li>
-      <li><strong>Latin name:</strong> <em>Vulpes vulpes</em></li>
-    </ul>
-  </div>
-</li>
 
 3. Error Handling
 
